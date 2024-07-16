@@ -1,4 +1,5 @@
 use std::env;
+use std::error::Error;
 use std::fs;
 use std::process;
 
@@ -30,8 +31,9 @@ fn main() {
     run(config);
 }
 
-fn run(config: Config){
-    let content = fs::read_to_string(config.file_path).expect("can't read file");
+fn run(config: Config) -> Result<(), Box<dyn Error>>{
+    let content = fs::read_to_string(config.file_path)?;
     print!("Content:\n{content}");
+    Ok(())
 
 }
