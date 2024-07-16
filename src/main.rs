@@ -27,7 +27,11 @@ fn main() {
     });
     println!("{} {}",config.query,config.file_path);
     
-    // let content = fs::read_to_string(config.file_path).expect("can't read file");
-    // print!("Content:\n{content}");
+    run(config);
 }
 
+fn run(config: Config){
+    let content = fs::read_to_string(config.file_path).expect("can't read file");
+    print!("Content:\n{content}");
+
+}
