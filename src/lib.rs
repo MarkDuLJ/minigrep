@@ -18,6 +18,15 @@ impl Config {
         let query = args[1].clone();
         let file_path = args[2].clone();
         let ignore_case = env::var("IGNORE_CASE").is_ok();
+        for (key, value) in env::vars_os() {
+            println!("{:?}: {:?}", key, value);
+        }
+     
+        if ignore_case {
+            println!("Ignoring case for comparisons.");
+        } else {
+            println!("Case-sensitive comparisons.");
+        }
 
         Ok(Config { query, file_path, ignore_case})
     }
