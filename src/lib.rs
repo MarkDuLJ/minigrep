@@ -10,13 +10,29 @@ pub struct Config {
 
 
 impl Config {
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("need two arguments");
-        }
+    // change args type from &[String] to impl Iterator<Item = String>
+    // now args can be any type that implements the Iterator trait and returns String items.
+    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+        
+        // remove clone from borrowed string to iter using next()
+        
+        args.next();
+        let query =match args.next() {
+            Some(arg) => arg,
+            None => return Err("No query string."),
+        };
 
-        let query = args[1].clone();
-        let file_path = args[2].clone();
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("No file path"),
+        };
+        
+        // if args.len() < 3 {
+        //     return Err("need two arguments");
+        // }
+
+        // let query = args[1].clone();
+        // let file_path = args[2].clone();
         let ignore_case = env::var("IGNORE_CASE").is_ok();
         for (key, value) in env::vars_os() {
             println!("{:?}: {:?}", key, value);
@@ -49,7 +65,12 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
+    // remove for loop, using iterator
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
+   /*  let mut results = Vec::new();
 
     for line in contents.lines() {
         if line.contains(query) {
@@ -58,6 +79,7 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     }
 
     results
+    */
 }
 
 pub fn search_case_insensitive<'a>(

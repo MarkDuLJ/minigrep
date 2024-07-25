@@ -4,9 +4,11 @@ use minigrep::Config;
 use minigrep::run;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    // remove below line, change to use iterator
+    // let args: Vec<String> = env::args().collect();
     
-    let config= Config::build(&args).unwrap_or_else(|err| {
+    // not borrow args, use args() directly
+    let config= Config::build(env::args()).unwrap_or_else(|err| {
         println!("Problem parsing arguments: {err}");
         process::exit(1);
     });
